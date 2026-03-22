@@ -19,7 +19,8 @@ export default function Dashboard() {
   const [students, setStudents] = useState([]);
   const [error, setError] = useState("");
 
-  const API = "https://placement-monitoring-backend-1.onrender.com/api/students";
+  // ✅ BACKEND URL (correct)
+  const API = "https://placement-monitoring-backend-1.onrender.com";
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem("token");
@@ -30,34 +31,42 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchStudents();
-    //eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, []);
 
   const fetchStudents = async () => {
     try {
-      const res = await axios.get(API, {
+      // ✅ FIXED ENDPOINT
+      const res = await axios.get(`${API}/api/students`, {
         headers: getAuthHeaders(),
       });
 
-      console.log("Dashboard Data:", res.data); // debug
+      console.log("Dashboard Data:", res.data);
 
-      setStudents(res.data);
+      // ✅ SAFE CHECK
+      setStudents(res.data || []);
     } catch (err) {
-      console.error(err);
+      console.error("Dashboard Error:", err);
       setError("Failed to load dashboard");
     }
   };
 
-  // 🚨 Prevent crash
-  if (!students) return <h2>Loading...</h2>;
+  // ✅ SAFE FALLBACK
+  if (!students || students.length === 0) {
+    return (
+      <Typography sx={{ p: 3 }}>
+        {error ? error : "No data available"}
+      </Typography>
+    );
+  }
 
   const total = students.length;
   const placed = students.filter((s) => s.placed).length;
   const notPlaced = total - placed;
 
   const pieData = [
-    { name: "Placed", value: placed || 0 },
-    { name: "Not Placed", value: notPlaced || 0 },
+    { name: "Placed", value: placed },
+    { name: "Not Placed", value: notPlaced },
   ];
 
   const COLORS = ["#4caf50", "#f44336"];
