@@ -11,7 +11,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import { useState } from "react";
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode] = useState(false);
 
   const theme = createTheme({
     palette: {
