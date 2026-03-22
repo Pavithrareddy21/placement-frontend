@@ -17,15 +17,38 @@ export default function Login() {
 
   const login = async () => {
     try {
-      const res = await axios.post("http://65.2.79.152:8080/api/auth/login", {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "http://65.2.79.152:8080/api/auth/login",
+        {
+          email,
+          password,
+        }
+      );
 
-      localStorage.setItem("token", res.data.token);
+      console.log("LOGIN RESPONSE:", res.data); // 🔥 debug
+
+      // ✅ handle all possible token formats
+      const token =
+        res.data.token || res.data.accessToken || res.data.jwt;
+
+      if (!token) {
+        alert("Invalid login response ❌");
+        return;
+      }
+
+      // ✅ store token
+      localStorage.setItem("token", token);
+
+      alert("Login successful ✅");
+
+      // ✅ redirect
       navigate("/");
     } catch (err) {
-      alert("Login failed");
+      console.error("LOGIN ERROR:", err);
+      alert(
+        err.response?.data?.message ||
+        "Login failed ❌"
+      );
     }
   };
 
@@ -49,6 +72,7 @@ export default function Login() {
             fullWidth
             label="Email"
             sx={{ mb: 2 }}
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
 
@@ -57,14 +81,11 @@ export default function Login() {
             label="Password"
             type="password"
             sx={{ mb: 2 }}
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={login}
-          >
+          <Button fullWidth variant="contained" onClick={login}>
             Login
           </Button>
         </CardContent>
