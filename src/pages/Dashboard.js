@@ -19,7 +19,7 @@ export default function Dashboard() {
   const [students, setStudents] = useState([]);
   const [error, setError] = useState("");
 
-  const API = "http://65.2.79.152:8080/api/students";
+  const API = "https://placement-monitoring-backend-1.onrender.com/api/students";
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem("token");

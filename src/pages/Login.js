@@ -18,7 +18,7 @@ export default function Login() {
   const login = async () => {
     try {
       const res = await axios.post(
-        "http://65.2.79.152:8080/api/auth/login",
+        "https://placement-monitoring-backend-1.onrender.com/api/auth/login",
         {
           email,
           password,

@@ -48,7 +48,7 @@ export default function Students() {
   const [openDelete, setOpenDelete] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
 
-  const API = "http://65.2.79.152:8080/api/students";
+  const API = "https://placement-monitoring-backend-1.onrender.com/api/students";
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem("token");
