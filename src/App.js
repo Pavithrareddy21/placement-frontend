@@ -1,24 +1,65 @@
-import logo from './logo.svg';
-import './App.css';
+import Navbar from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
+import Students from "./pages/Students";
+import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
+import PrivateRoute from "./components/PrivateRoute";
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Box, Toolbar } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material";
+import { useState } from "react";
 
 function App() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  const theme = createTheme({
+    palette: {
+      mode: darkMode ? "dark" : "light",
+    },
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Routes>
+          
+        {/* 🔹 LOGIN PAGE (no sidebar/navbar) */}
+        <Route path="/login" element={<Login />} />
+
+        {/* 🔹 PROTECTED ROUTES */}
+        <Route
+          path="/*"
+          element={
+            <PrivateRoute>
+              <>
+                <Navbar />
+                <Sidebar />
+
+                <Box sx={{ display: "flex" }}>
+                  <Box
+                    component="main"
+                    sx={{
+                      flexGrow: 1,
+                      ml: "240px",
+                      p: 3,
+                    }}
+                  >
+                    <Toolbar /> {/* pushes content below navbar */}
+
+                    <Routes>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="/students" element={<Students />} />
+                    </Routes>
+                  </Box>
+                </Box>
+              </>
+            </PrivateRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
